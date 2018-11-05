@@ -14,31 +14,31 @@
 import 'phoenix_html'
 import {Socket, Presence} from 'phoenix'
 
-// Login
+// // Login
 
-let renderMessageInput = input => {
-    input.innerHTML = `
-    <h2>Messages</h2>
-    <input type="text" id="NewMessage" placeholder="Type and press enter..." class="form-control">
-    <ul id="MessageList" class="list-unstyled"></ul>
-    `
-}
+// let renderMessageInput = input => {
+//     input.innerHTML = `
+//     <h2>Messages</h2>
+//     <input type="text" id="NewMessage" placeholder="Type and press enter..." class="form-control">
+//     <ul id="MessageList" class="list-unstyled"></ul>
+//     `
+// }
 
-let user
-let userInput = document.getElementById('NewUser')
-userInput.addEventListener('keypress', e => {
-    // keyCode 13 is enter
-    if (e.keyCode == 13 && userInput.value != '') {
-        let socket = new Socket('/socket', {params: {user:user}})
-        renderMessageInput()
-        socket.connect()
-    }
-})
+// let user
+// let userInput = document.getElementById('NewUser')
+// userInput.addEventListener('keypress', e => {
+//     // keyCode 13 is enter
+//     if (e.keyCode == 13 && userInput.value != '') {
+//         let socket = new Socket('/socket', {params: {user:user}})
+//         renderMessageInput()
+//         socket.connect()
+//     }
+// })
 
-// // Socket
-// let user = document.getElementById('User').innerText
-// let socket = new Socket('/socket', {params: {user:user}})
-// socket.connect()
+// Socket
+let user = document.getElementById('User').innerText
+let socket = new Socket('/socket', {params: {user:user}})
+socket.connect()
 
 // Presence
 let presences = {}
