@@ -8,7 +8,6 @@ defmodule PhxChatWeb.RoomChannel do
   end
 
   def handle_info(:after_join, socket) do
-    hello = "hello"
     Presence.track(socket, socket.assigns.user, %{online_at: :os.system_time(:milli_seconds)})
     push(socket, "presence_state", Presence.list(socket))
     {:noreply, socket}
