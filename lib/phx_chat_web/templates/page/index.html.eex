@@ -1,27 +1,27 @@
-<div class="row">
-  <div class="col-md-12 alert alert-info">
-    Hello, <span id="User"><%= @conn.params["user"] %></span>!
+<div class="chat row">
+  <div class="col-sm-9">
+    <div class="panel panel-default chat-room">
+      <div class="panel-heading form-inline">
+          <label for='user-input' class='col-form-label'><h4>Hi, my name is</h4></label>
+          <input type="text" id="user-input" name="userName" class="form-control input" placeholder= "your name here..."value="<%= @conn.params["user"] %>" autofocus>
+      </div>
+      <div id="chat-messages" class="panel-body panel-messages">
+        <ul id='msg-list' style='list-style: none; min-height:200px; padding: 10px;'></ul>
+      </div>
+      <input type="text" id="message-input" class="form-control" placeholder="type a message…">
+    </div>
   </div>
-  <!-- The list of messages will appear here: -->
-  <ul id='msg-list' class='row' style='list-style: none; min-height:200px; padding: 10px;'></ul>
 
-  <div class="col-md-9">
-    <div class="col-xs-3">
-      <input type="text" id="name" class="form-control" placeholder="Your Name" autofocus>
+  <div class="col-sm-3">
+    <div class="panel panel-default chat-room">
+      <div class="panel-heading">
+        <h4>online users</h4>
+      </div>
+      <div class="panel-body panel-users" id="online-users">
+        <ul id="user-list" class="list-unstyled">
+          <li>Loading online users...</li>
+        </ul>
+      </div>
     </div>
-    <div class="col-xs-9">
-      <input type="text" id="msg" class="form-control" placeholder="Your Message">
-    </div>
-  <%# </div>
-  <div id="input" class="col-md-9"> %>
-    <h3>Messages</h3>
-    <input type="text" id="NewMessage" placeholder="Type and press enter..." class="form-control">
-    <ul id="MessageList" class="list-unstyled"></ul>
-  </div>
-  <div  class="col-md-3">
-    <h3>Who’s Online</h3>
-    <ul id="UserList" class="list-unstyled">
-      <li>Loading online users...</li>
-    </ul>
   </div>
 </div>

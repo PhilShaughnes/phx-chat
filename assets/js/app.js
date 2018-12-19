@@ -14,30 +14,22 @@
 import 'phoenix_html'
 import {Socket, Presence} from 'phoenix'
 
-// // Login
+// init
 
-// let renderMessageInput = input => {
-//     input.innerHTML = `
-//     <h2>Messages</h2>
-//     <input type="text" id="NewMessage" placeholder="Type and press enter..." class="form-control">
-//     <ul id="MessageList" class="list-unstyled"></ul>
-//     `
-// }
-
-// let user
-// let userInput = document.getElementById('NewUser')
-// userInput.addEventListener('keypress', e => {
-//     // keyCode 13 is enter
-//     if (e.keyCode == 13 && userInput.value != '') {
-//         let socket = new Socket('/socket', {params: {user:user}})
-//         renderMessageInput()
-//         socket.connect()
-//     }
-// })
+// signup
+let userName = document.getElementById('user-input')
+userName.addEventListener('keypress', e => {
+    // keyCode 13 is enter
+  if (e.keyCode == 13 && userName.value != '') {
+    let currentUrl = window.location.origin
+    window.location.replace(currentUrl + '/?user=' + userName.value)
+  }
+})
 
 // Socket
-let user = document.getElementById('User').innerText
+let user = userName.value
 let socket = new Socket('/socket', {params: {user:user}})
+console.log("user:", user)
 socket.connect()
 
 // Presence
@@ -54,14 +46,14 @@ let listBy = (user, {metas: metas}) => {
     }
 }
 
-let userList = document.getElementById('UserList')
+let userList = document.getElementById('user-list')
 let render = presences => {
     userList.innerHTML = Presence.list(presences, listBy)
         .map(presence => `
             <li>
                 ${presence.user}
                 <br>
-                <small>online since ${presence.onlineAt}</small>
+                <small>on since ${presence.onlineAt}</small>
             <li>
         `)
         .join('')
@@ -79,31 +71,36 @@ room.on('presence_diff', diff => {
     render(presences)
 })
 
-room.join()
+room.join() // join the room
 
 // Chat
-let messageInput = document.getElementById('NewMessage')
-messageInput.addEventListener('keypress', e => {
+let msg = document.getElementById('message-input')
+msg.addEventListener('keypress', e => {
     // keyCode 13 is enter
-    if (e.keyCode == 13 && messageInput.value != '') {
-        room.push('message:new', messageInput.value)
-        messageInput.value = ''
+    if (e.keyCode == 13 && msg.value != '') {
+      room.push('message:new', {
+        name: user,
+        message: msg.value
+      })
+        msg.value = ''
     }
 })
 
-let messageList = document.getElementById('MessageList')
-let renderMessage = message => {
+let messageList = document.getElementById('msg-list')
+let messageBox = document.getElementById('chat-messages')
+let renderMessage = msg => {
     let messageElement = document.createElement('li')
+    let name = msg.name || 'guest';
     messageElement.innerHTML = `
-        <b>${message.user}</b>
-        <i>${formatTimestamp(message.timestamp)}</i>
-        <p>${message.body}</p>
-    `
+      <b>${name}</b>
+      <i>${formatTimestamp(msg.timestamp)}</i>
+      <p>${msg.message}</p>
+    ` 
     messageList.appendChild(messageElement)
-    messageList.scrollTop = messageList.scrollHeight
+    messageBox.scrollTop = messageBox.scrollHeight
 }
 
-room.on('message:new', message => {
-    console.log(message)
-    renderMessage(message)
+room.on('message:new', msg => {
+    console.log(msg)
+    renderMessage(msg)
 })
