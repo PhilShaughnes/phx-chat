@@ -1,6 +1,5 @@
 defmodule PhxChatWeb.UserSocket do
   use Phoenix.Socket
-  require IEx
 
   ## Channels
   channel "room:*", PhxChatWeb.RoomChannel
@@ -21,7 +20,6 @@ defmodule PhxChatWeb.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(%{"user" => user}, socket) do
-    # IEx.pry
     {:ok, assign(socket, :user, user)}
   end
 

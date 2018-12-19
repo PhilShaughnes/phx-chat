@@ -1,5 +1,4 @@
 defmodule PhxChatWeb.RoomChannel do
-  require IEx
   use PhxChatWeb, :channel
   alias PhxChatWeb.Presence
 
@@ -10,17 +9,23 @@ defmodule PhxChatWeb.RoomChannel do
 
   def handle_info(:after_join, socket) do
     Presence.track(socket, socket.assigns.user, %{online_at: :os.system_time(:milli_seconds)})
-    # IEx.pry
     push(socket, "presence_state", Presence.list(socket))
+
+    PhxChat.Message.get_messages()
+    |> Enum.each(fn msg -> push(socket, "message:new", %{
+      name: msg.name,
+      message: msg.message,
+      timestamp: "---"
+    }) end)
+
     {:noreply, socket}
   end
 
   def handle_in("message:new", message, socket) do
-    # PhxChat.Message.changeset(%PhxChat.Message{}, message) |> PhxChat.Repo.insert
-    # IEx.pry
+    PhxChat.Message.changeset(%PhxChat.Message{}, message) |> PhxChat.Repo.insert
 
     broadcast!(socket, "message:new", %{
-      name: socket.assigns.user,
+      name: message["name"],
       message: message["message"],
       timestamp: :os.system_time(:milli_seconds)
     })
